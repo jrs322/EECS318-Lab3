@@ -1,0 +1,14 @@
+module ssp(PRDATA, OE_B, bit_out, SSPCLK_OUT, S_OUT,TXINTR, RXINTR,
+          CLK, CLEAR, SEL, WRITE, PWDATA, SSPCLK_IN, S_IN, bit_in);
+  input CLK, CLEAR, SEL, WRITE, SSPCLK_IN, S_IN, bit_in;
+  input[7:0] PWDATA;
+  output OE_B, bit_out, S_OUT, TXINTR, RXINTR, SSPCLK_OUT;
+  output[7:0] PRDATA;
+  wire RECEIVED_DATA, SENT_DATA;
+  wire[7:0] TXDATA, RXDATA;
+  TXFIFO txfifo(TXDATA, TXINTR ,CLEAR, CLK, PWDATA, SEL, WRITE, RECEIVED_DATA);
+  RXFIFO rxfifo(PRDATA, RXINTR, RXDATA, CLEAR, CLK, SEL, WRITE, SENT_DATA);
+  serial_port ssp(RXDATA, bit_out, SSPCLK_OUT, OE_B, S_OUT, RECEIVED_DATA, SENT_DATA,
+  TXDATA, bit_in, SSPCLK_IN, S_IN, CLEAR);
+
+endmodule
